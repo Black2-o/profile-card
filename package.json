@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "generate:assets": "python ./scripts/generate_assets.py"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.3.1",

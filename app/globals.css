@@ -1,49 +1,420 @@
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-html {
-  height: 100%;
-}
-
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-body {
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
-  color: var(--foreground);
-  background: var(--background);
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
   font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+}
+
+:root {
+  --theme: #3c5bff;
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Smooth Scrolling & Custom Modern Theme Scrollbar */
+html {
+  scroll-behavior: smooth;
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f8f9fc;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd2e4;
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--theme);
 }
 
 * {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd2e4 #f8f9fc;
 }
 
-a {
-  color: inherit;
+/* Background */
+body {
+  background: white;
+  background-image: radial-gradient(#e8e8e8 2px, transparent 1px);
+  background-size: 22px 22px;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+}
+
+/* Card Entrance Animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Micro-Stagger Animations for Internal Elements */
+@keyframes fadeInUpStagger {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stagger-1 {
+  animation: fadeInUpStagger 0.45s var(--ease-spring) both;
+  animation-delay: 0.08s;
+}
+
+.stagger-2 {
+  animation: fadeInUpStagger 0.45s var(--ease-spring) both;
+  animation-delay: 0.16s;
+}
+
+.stagger-3 {
+  animation: fadeInUpStagger 0.45s var(--ease-spring) both;
+  animation-delay: 0.24s;
+}
+
+.stagger-4 {
+  animation: fadeInUpStagger 0.45s var(--ease-spring) both;
+  animation-delay: 0.32s;
+}
+
+/* Card - Balanced Proportions with Crisp Sub-pixel Border */
+.card {
+  width: 100%;
+  max-width: 440px;
+  background: white;
+  border-radius: 17px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.03);
+  animation: fadeInUp 0.55s var(--ease-spring) forwards;
+  will-change: transform, opacity;
+  position: relative;
+}
+
+/* Cover Image */
+.cover {
+  position: relative;
+  height: 125px;
+  width: 100%;
+  background: #f0f2f5;
+  border-radius: 16px 16px 0 0;
+  overflow: hidden;
+}
+
+.cover-img {
+  object-fit: cover;
+  transition: transform 0.6s var(--ease-spring);
+}
+
+.card:hover .cover-img {
+  transform: scale(1.03);
+}
+
+.cover-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+/* Profile */
+.profile {
+  text-align: center;
+  padding: 0 26px 18px;
+  margin-top: -44px;
+  position: relative;
+  z-index: 2;
+}
+
+.profile-img-wrapper {
+  position: relative;
+  width: 88px;
+  height: 88px;
+  margin: 0 auto 9px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile-img {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  border: 4px solid white;
+  object-fit: cover;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  background: white;
+  transition: transform 0.35s var(--ease-spring);
+}
+
+.profile-img:hover {
+  transform: scale(1.04);
+}
+
+.profile h1 {
+  font-size: 20px;
+  margin-bottom: 4px;
+  color: #111;
+  font-weight: 700;
+}
+
+.bio {
+  color: #555;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.stats {
+  font-size: 13px;
+  color: #777;
+  margin-top: 6px;
+  line-height: 1.48;
+}
+
+.stats b,
+.stats strong {
+  color: #222;
+  font-weight: 700;
+}
+
+/* Section */
+.section {
+  padding: 20px 28px 24px;
+  border-top: 1px solid #f0f0f0;
+  position: relative;
+  z-index: 1;
+}
+
+.section:hover,
+.section:focus-within {
+  z-index: 50;
+}
+
+.section h2 {
+  font-size: 14.5px;
+  margin-bottom: 13px;
+  color: #333;
+  font-weight: 600;
+}
+
+/* Portfolio Button with Tactile Active Feedback */
+.portfolio {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 16px;
+  border-radius: 10px;
+  background: #f3f5ff;
+  border: 1px solid rgba(60, 91, 255, 0.08);
   text-decoration: none;
+  color: #333;
+  font-size: 14.5px;
+  font-weight: 500;
+  transition: transform 0.25s var(--ease-spring), background-color 0.25s var(--ease-spring), color 0.25s var(--ease-spring), box-shadow 0.25s var(--ease-spring);
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+.portfolio:hover {
+  background: var(--theme);
+  color: white;
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 8px 20px -4px rgba(60, 91, 255, 0.35);
+}
+
+.portfolio:active {
+  transform: scale(0.97);
+  box-shadow: 0 3px 8px rgba(60, 91, 255, 0.2);
+}
+
+/* Icon Container */
+.icons {
+  display: flex;
+  gap: 11px;
+  flex-wrap: wrap;
+}
+
+/* Icon Button with Tactile Active Feedback */
+.icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #f5f7ff;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 19px;
+  color: #555;
+  text-decoration: none;
+  transition: transform 0.25s var(--ease-spring), background-color 0.25s var(--ease-spring), color 0.25s var(--ease-spring), box-shadow 0.25s var(--ease-spring);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  position: relative;
+}
+
+.icon:hover:not(.disabled) {
+  transform: translateY(-3px) scale(1.08);
+  box-shadow: 0 10px 20px -2px rgba(0, 0, 0, 0.12);
+  z-index: 60;
+}
+
+.icon:active:not(.disabled) {
+  transform: scale(0.92);
+}
+
+/* Realistic Brand Colors */
+.whatsapp:hover:not(.disabled) {
+  background: #25d366;
+  color: white;
+}
+
+.messenger:hover:not(.disabled) {
+  background: linear-gradient(135deg, #00b2ff, #006aff);
+  color: white;
+}
+
+.email:hover:not(.disabled) {
+  background: #ea4335;
+  color: white;
+}
+
+.email.copied {
+  background: #10b981 !important;
+  color: white !important;
+  transform: scale(1.08);
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
+}
+
+.instagram:hover:not(.disabled) {
+  background: linear-gradient(
+    45deg,
+    #f09433 0%,
+    #e6683c 25%,
+    #dc2743 50%,
+    #cc2366 75%,
+    #bc1888 100%
+  );
+  color: white;
+}
+
+.youtube:hover:not(.disabled) {
+  background: #ff0000;
+  color: white;
+}
+
+.twitter:hover:not(.disabled) {
+  background: #000000;
+  color: white;
+}
+
+/* Inactive / Disabled Icon (e.g. TikTok unclickable) */
+.icon.disabled {
+  background: #f5f7ff;
+  color: #9aa0b0;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.25s var(--ease-spring);
+  position: relative;
+}
+
+.icon.disabled:hover {
+  transform: translateY(-2px);
+  background: #ebedf5;
+  color: #555b6e;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.icon.disabled:active {
+  transform: scale(0.97);
+}
+
+/* Solid Crisp Tooltip (Never cuts or bleeds with border lines) */
+.icon[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: calc(100% + 7px);
+  left: 50%;
+  transform: translateX(-50%) translateY(-4px);
+  background: #18191c;
+  color: #ffffff;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s var(--ease-spring), transform 0.2s var(--ease-spring);
+  box-shadow: 0 8px 20px -2px rgba(0, 0, 0, 0.35);
+  z-index: 999;
+}
+
+/* Tooltip Arrow */
+.icon[data-tooltip]::before {
+  content: "";
+  position: absolute;
+  top: calc(100% + 2px);
+  left: 50%;
+  transform: translateX(-50%) translateY(-4px);
+  border-width: 0 5px 5px 5px;
+  border-style: solid;
+  border-color: transparent transparent #18191c transparent;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s var(--ease-spring), transform 0.2s var(--ease-spring);
+  z-index: 999;
+}
+
+.icon[data-tooltip]:hover::after,
+.icon[data-tooltip]:hover::before {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* First icon in row: align tooltip to the left of the button so it never pokes out */
+.icons .icon:first-child[data-tooltip]::after {
+  left: 0;
+  transform: translateX(0) translateY(-4px);
+}
+.icons .icon:first-child[data-tooltip]::before {
+  left: 22px;
+  transform: translateX(-50%) translateY(-4px);
+}
+.icons .icon:first-child[data-tooltip]:hover::after {
+  transform: translateX(0) translateY(0);
+}
+.icons .icon:first-child[data-tooltip]:hover::before {
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Last section bottom breathing space for tooltips */
+.section:last-child {
+  padding-bottom: 26px;
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  body {
+    padding: 12px;
+  }
+  .section {
+    padding: 16px 20px;
   }
 }
