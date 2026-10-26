@@ -8,24 +8,19 @@ export const revalidate = 60; // Revalidate at most every 60 seconds
 
 const fallbackProfile: Profile = {
   id: "default",
-  name: "Md Shahidullah",
-  bio: "Full-Stack Developer (Python, Django & React)",
-  stats_html:
-    'Turning ideas into scalable, real-world products • Django • APIs • Systems • Startups • 🏆 Hackathon winner • <b>DM “CODE”</b>',
+  name: "John Doe",
+  bio: "Full-Stack Developer",
+  stats_html: "Building scalable web products • Clean Code • APIs • Modern Systems",
   cover_image_url: "",
   avatar_url: "",
-  portfolio_url: "#",
-  talk_links: {
-    whatsapp: "#",
-    messenger: "#",
-    email: "mailto:contact@example.com",
-  },
-  follow_links: {
-    instagram: "#",
-    tiktok: null, // Unclickable & disabled
-    youtube: "#",
-    twitter: "#",
-  },
+  portfolio_url: null,
+  whatsapp: null,
+  messenger: null,
+  email: null,
+  instagram: null,
+  tiktok: null,
+  youtube: null,
+  twitter: null,
 };
 
 async function getProfile(): Promise<Profile> {
@@ -44,8 +39,14 @@ async function getProfile(): Promise<Profile> {
     return {
       ...fallbackProfile,
       ...data,
-      talk_links: data.talk_links || fallbackProfile.talk_links,
-      follow_links: data.follow_links || fallbackProfile.follow_links,
+      // Flat columns with graceful fallback to legacy JSON if ever present
+      whatsapp: data.whatsapp !== undefined ? data.whatsapp : data.talk_links?.whatsapp,
+      messenger: data.messenger !== undefined ? data.messenger : data.talk_links?.messenger,
+      email: data.email !== undefined ? data.email : data.talk_links?.email,
+      instagram: data.instagram !== undefined ? data.instagram : data.follow_links?.instagram,
+      tiktok: data.tiktok !== undefined ? data.tiktok : data.follow_links?.tiktok,
+      youtube: data.youtube !== undefined ? data.youtube : data.follow_links?.youtube,
+      twitter: data.twitter !== undefined ? data.twitter : data.follow_links?.twitter,
     };
   } catch {
     return fallbackProfile;
@@ -88,10 +89,12 @@ export default async function Page() {
     image: profile.avatar_url,
     url: profile.portfolio_url !== "#" ? profile.portfolio_url : undefined,
     sameAs: [
-      profile.talk_links?.whatsapp,
-      profile.follow_links?.instagram,
-      profile.follow_links?.youtube,
-      profile.follow_links?.twitter,
+      profile.whatsapp,
+      profile.messenger,
+      profile.instagram,
+      profile.tiktok,
+      profile.youtube,
+      profile.twitter,
     ].filter(
       (url): url is string =>
         typeof url === "string" && url !== "#" && !url.startsWith("mailto:")
@@ -105,7 +108,7 @@ export default async function Page() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="card">
+      <main className="card">
         {/* Cover Image */}
         <div className="cover">
           {profile.cover_image_url && (
@@ -146,7 +149,15 @@ export default async function Page() {
                   fontSize: "28px",
                 }}
               >
-                MS
+                {profile.name
+                  ? profile.name
+                      .split(" ")
+                      .filter(Boolean)
+                      .map((n) => n[0])
+                      .slice(0, 2)
+                      .join("")
+                      .toUpperCase()
+                  : "JD"}
               </div>
             )}
           </div>
@@ -163,25 +174,40 @@ export default async function Page() {
         {/* Find My Work */}
         <div className="section stagger-2">
           <h2>Find My Work</h2>
-          <a
-            href={profile.portfolio_url || "#"}
-            className="portfolio"
-            target={profile.portfolio_url !== "#" ? "_blank" : undefined}
-            rel="noopener noreferrer"
-          >
-            <i className="fa-solid fa-briefcase"></i>
-            Portfolio
-          </a>
+          {profile.portfolio_url && profile.portfolio_url !== "#" ? (
+            <a
+              href={profile.portfolio_url}
+              className="portfolio"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Portfolio"
+            >
+              <i className="fa-solid fa-briefcase"></i>
+              Portfolio
+            </a>
+          ) : (
+            <span
+              className="portfolio disabled"
+              data-tooltip="Not linked"
+              aria-label="Portfolio (Not linked)"
+              role="button"
+              aria-disabled="true"
+            >
+              <i className="fa-solid fa-briefcase"></i>
+              Portfolio
+            </span>
+          )}
         </div>
 
         {/* Talk With Me */}
         <div className="section stagger-3">
           <h2>Talk With Me</h2>
           <div className="icons">
-            {profile.talk_links?.whatsapp && (
+            {/* WhatsApp */}
+            {profile.whatsapp ? (
               <a
                 className="icon whatsapp"
-                href={profile.talk_links.whatsapp}
+                href={profile.whatsapp}
                 data-tooltip="WhatsApp"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -189,12 +215,23 @@ export default async function Page() {
               >
                 <i className="fab fa-whatsapp"></i>
               </a>
+            ) : (
+              <span
+                className="icon whatsapp disabled"
+                data-tooltip="Not linked"
+                aria-label="WhatsApp (Not linked)"
+                role="button"
+                aria-disabled="true"
+              >
+                <i className="fab fa-whatsapp"></i>
+              </span>
             )}
 
-            {profile.talk_links?.messenger && (
+            {/* Messenger */}
+            {profile.messenger ? (
               <a
                 className="icon messenger"
-                href={profile.talk_links.messenger}
+                href={profile.messenger}
                 data-tooltip="Messenger"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -202,10 +239,31 @@ export default async function Page() {
               >
                 <i className="fab fa-facebook-messenger"></i>
               </a>
+            ) : (
+              <span
+                className="icon messenger disabled"
+                data-tooltip="Not linked"
+                aria-label="Messenger (Not linked)"
+                role="button"
+                aria-disabled="true"
+              >
+                <i className="fab fa-facebook-messenger"></i>
+              </span>
             )}
 
-            {profile.talk_links?.email && (
-              <EmailButton email={profile.talk_links.email} />
+            {/* Email */}
+            {profile.email ? (
+              <EmailButton email={profile.email} />
+            ) : (
+              <span
+                className="icon email disabled"
+                data-tooltip="Not linked"
+                aria-label="Email (Not linked)"
+                role="button"
+                aria-disabled="true"
+              >
+                <i className="fa-solid fa-envelope"></i>
+              </span>
             )}
           </div>
         </div>
@@ -214,10 +272,11 @@ export default async function Page() {
         <div className="section stagger-4">
           <h2>Follow Me</h2>
           <div className="icons">
-            {profile.follow_links?.instagram && (
+            {/* Instagram */}
+            {profile.instagram ? (
               <a
                 className="icon instagram"
-                href={profile.follow_links.instagram}
+                href={profile.instagram}
                 data-tooltip="Instagram"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -225,13 +284,23 @@ export default async function Page() {
               >
                 <i className="fab fa-instagram"></i>
               </a>
+            ) : (
+              <span
+                className="icon instagram disabled"
+                data-tooltip="Not linked"
+                aria-label="Instagram (Not linked)"
+                role="button"
+                aria-disabled="true"
+              >
+                <i className="fab fa-instagram"></i>
+              </span>
             )}
 
-            {/* TikTok: When null or empty, renders disabled with soft gray tone & custom tooltip */}
-            {profile.follow_links?.tiktok ? (
+            {/* TikTok */}
+            {profile.tiktok ? (
               <a
                 className="icon tiktok"
-                href={profile.follow_links.tiktok}
+                href={profile.tiktok}
                 data-tooltip="TikTok"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -251,10 +320,11 @@ export default async function Page() {
               </span>
             )}
 
-            {profile.follow_links?.youtube && (
+            {/* YouTube */}
+            {profile.youtube ? (
               <a
                 className="icon youtube"
-                href={profile.follow_links.youtube}
+                href={profile.youtube}
                 data-tooltip="YouTube"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -262,12 +332,23 @@ export default async function Page() {
               >
                 <i className="fab fa-youtube"></i>
               </a>
+            ) : (
+              <span
+                className="icon youtube disabled"
+                data-tooltip="Not linked"
+                aria-label="YouTube (Not linked)"
+                role="button"
+                aria-disabled="true"
+              >
+                <i className="fab fa-youtube"></i>
+              </span>
             )}
 
-            {profile.follow_links?.twitter && (
+            {/* Twitter / X */}
+            {profile.twitter ? (
               <a
                 className="icon twitter"
-                href={profile.follow_links.twitter}
+                href={profile.twitter}
                 data-tooltip="X (Twitter)"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -275,10 +356,20 @@ export default async function Page() {
               >
                 <i className="fab fa-x-twitter"></i>
               </a>
+            ) : (
+              <span
+                className="icon twitter disabled"
+                data-tooltip="Not linked"
+                aria-label="Twitter / X (Not linked)"
+                role="button"
+                aria-disabled="true"
+              >
+                <i className="fab fa-x-twitter"></i>
+              </span>
             )}
           </div>
         </div>
-      </div>
+      </main>
     </>
   );
 }

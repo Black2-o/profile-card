@@ -36,8 +36,8 @@ if os.path.exists(ENV_PATH):
                 supabase_key = line.split("=", 1)[1].strip()
 
 # 2. Fetch Profile Info from Supabase (using standard library)
-name = "Md Shahidullah"
-bio = "Full-Stack Developer (Python, Django & React)"
+name = "John Doe"
+bio = "Full-Stack Developer"
 avatar_url = ""
 
 if supabase_url and supabase_key:

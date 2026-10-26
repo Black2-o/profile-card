@@ -14,23 +14,20 @@ const ogImage = process.env.NEXT_PUBLIC_SUPABASE_URL
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://localhost:3000"),
-  title: "Md Shahidullah | Full-Stack Developer",
-  description:
-    "Full-Stack Developer (Python, Django & React). Turning ideas into scalable, real-world products • Django • APIs • Systems • Startups • Hackathon winner.",
+  title: "Profile Card",
+  description: "Developer & Creator Profile Card",
   icons: {
     icon: "/favicon.ico",
   },
   openGraph: {
-    title: "Md Shahidullah | Full-Stack Developer",
-    description:
-      "Full-Stack Developer (Python, Django & React). Turning ideas into scalable, real-world products • Django • APIs • Systems • Startups • Hackathon winner.",
+    title: "Profile Card",
+    description: "Developer & Creator Profile Card",
     images: [ogImage],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Md Shahidullah | Full-Stack Developer",
-    description:
-      "Full-Stack Developer (Python, Django & React). Turning ideas into scalable, real-world products • Django • APIs • Systems • Startups • Hackathon winner.",
+    title: "Profile Card",
+    description: "Developer & Creator Profile Card",
     images: [ogImage],
   },
   robots: {
@@ -44,8 +41,20 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const supabaseOrigin = process.env.NEXT_PUBLIC_SUPABASE_URL
+    ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).origin
+    : null;
+
   return (
     <html lang="en">
+      <head>
+        {supabaseOrigin && (
+          <>
+            <link rel="preconnect" href={supabaseOrigin} crossOrigin="anonymous" />
+            <link rel="dns-prefetch" href={supabaseOrigin} />
+          </>
+        )}
+      </head>
       <body>{children}</body>
     </html>
   );
