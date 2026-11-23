@@ -1,6 +1,6 @@
 import Image from "next/image";
 import type { Metadata } from "next";
-import { supabase } from "@/lib/supabase";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 import { Profile } from "@/types/profile";
 import { EmailButton } from "@/components/EmailButton";
 
@@ -24,6 +24,10 @@ const fallbackProfile: Profile = {
 };
 
 async function getProfile(): Promise<Profile> {
+  if (!isSupabaseConfigured) {
+    return fallbackProfile;
+  }
+
   try {
     const { data, error } = await supabase
       .from("profiles")
