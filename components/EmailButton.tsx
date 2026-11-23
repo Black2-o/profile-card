@@ -5,7 +5,7 @@ import { useState } from "react";
 export function EmailButton({ email }: { email: string }) {
   const [copied, setCopied] = useState(false);
 
-  const handleEmailClick = (e: React.MouseEvent) => {
+  const handleEmailClick = () => {
     const rawEmail = email.replace(/^mailto:/, "").trim();
     if (navigator.clipboard) {
       navigator.clipboard.writeText(rawEmail);
