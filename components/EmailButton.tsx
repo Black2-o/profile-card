@@ -20,6 +20,7 @@ export function EmailButton({ email }: { email: string }) {
       href={email.startsWith("mailto:") ? email : `mailto:${email}`}
       onClick={handleEmailClick}
       data-tooltip={copied ? "Copied!" : "Email"}
+      data-umami-event="copy-email"
       aria-label="Email"
     >
       <i className={copied ? "fa-solid fa-check" : "fa-solid fa-envelope"}></i>

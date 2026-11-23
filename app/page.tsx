@@ -185,6 +185,7 @@ export default async function Page() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Portfolio"
+              data-umami-event="click-portfolio"
             >
               <i className="fa-solid fa-briefcase"></i>
               Portfolio
@@ -216,6 +217,7 @@ export default async function Page() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="WhatsApp"
+                data-umami-event="click-whatsapp"
               >
                 <i className="fab fa-whatsapp"></i>
               </a>
@@ -240,6 +242,7 @@ export default async function Page() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Facebook Messenger"
+                data-umami-event="click-messenger"
               >
                 <i className="fab fa-facebook-messenger"></i>
               </a>
@@ -285,6 +288,7 @@ export default async function Page() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram"
+                data-umami-event="click-instagram"
               >
                 <i className="fab fa-instagram"></i>
               </a>
@@ -309,6 +313,7 @@ export default async function Page() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="TikTok"
+                data-umami-event="click-tiktok"
               >
                 <i className="fab fa-tiktok"></i>
               </a>
@@ -333,6 +338,7 @@ export default async function Page() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="YouTube"
+                data-umami-event="click-youtube"
               >
                 <i className="fab fa-youtube"></i>
               </a>
@@ -357,6 +363,7 @@ export default async function Page() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Twitter / X"
+                data-umami-event="click-twitter"
               >
                 <i className="fab fa-x-twitter"></i>
               </a>

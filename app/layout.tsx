@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./globals.css";
 
@@ -45,6 +46,10 @@ export default function RootLayout({
     ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).origin
     : null;
 
+  const umamiWebsiteId =
+    process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID ||
+    "21e40a60-e18a-457b-8515-b01e26f34d94";
+
   return (
     <html lang="en">
       <head>
@@ -53,6 +58,14 @@ export default function RootLayout({
             <link rel="preconnect" href={supabaseOrigin} crossOrigin="anonymous" />
             <link rel="dns-prefetch" href={supabaseOrigin} />
           </>
+        )}
+        {umamiWebsiteId && (
+          <Script
+            defer
+            src="https://cloud.umami.is/script.js"
+            data-website-id={umamiWebsiteId}
+            strategy="afterInteractive"
+          />
         )}
       </head>
       <body>{children}</body>
