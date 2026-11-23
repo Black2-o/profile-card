@@ -11,23 +11,10 @@ export interface Profile {
   whatsapp?: string | null;
   messenger?: string | null;
   email?: string | null;
-  instagram?: string | null;
-  tiktok?: string | null;
-  youtube?: string | null;
   twitter?: string | null;
-
-  // Backward-compatibility support
-  talk_links?: {
-    whatsapp?: string | null;
-    messenger?: string | null;
-    email?: string | null;
-  } | null;
-  follow_links?: {
-    instagram?: string | null;
-    tiktok?: string | null;
-    youtube?: string | null;
-    twitter?: string | null;
-  } | null;
+  youtube?: string | null;
+  github?: string | null;
+  instagram?: string | null;
 
   created_at?: string;
   updated_at?: string;

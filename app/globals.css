@@ -344,6 +344,11 @@ body {
   color: white;
 }
 
+.github:hover:not(.disabled) {
+  background: #24292e;
+  color: white;
+}
+
 /* Inactive / Disabled Icon (e.g. TikTok unclickable) */
 .icon.disabled {
   background: #f5f7ff;
