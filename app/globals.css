@@ -349,6 +349,16 @@ body {
   color: white;
 }
 
+.telegram:hover:not(.disabled) {
+  background: #24a1de;
+  color: white;
+}
+
+.tiktok:hover:not(.disabled) {
+  background: #000000;
+  color: white;
+}
+
 /* Inactive / Disabled Icon (e.g. TikTok unclickable) */
 .icon.disabled {
   background: #f5f7ff;

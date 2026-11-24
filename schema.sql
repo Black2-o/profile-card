@@ -1,7 +1,7 @@
 -- ==============================================================================
 -- Profiles Table Schema (Flat Columns - No JSONB)
 -- All social & contact links are stored directly as flat columns.
--- If any link column is NULL or empty, the frontend renders it as disabled/unclickable.
+-- If any link column is NULL or empty, it will not be displayed on the card.
 -- ==============================================================================
 
 -- 1. Reset table if it already exists (ensures clean setup)
@@ -19,14 +19,16 @@ CREATE TABLE profiles (
     
     -- Talk With Me links (Flat columns)
     whatsapp TEXT DEFAULT 'https://wa.me/yourphonenumber',
-    messenger TEXT DEFAULT 'https://m.me/yourusername',
+    telegram TEXT DEFAULT 'https://t.me/hishahidullah',
+    messenger TEXT DEFAULT NULL,
     email TEXT DEFAULT 'mailto:yourname@example.com',
     
-    -- Follow Me links (Flat columns: X -> YouTube -> GitHub -> Instagram)
+    -- Follow Me links (Flat columns: X -> YouTube -> GitHub -> Instagram -> TikTok)
     twitter TEXT DEFAULT 'https://x.com/yourusername',
     youtube TEXT DEFAULT 'https://youtube.com/@yourchannel',
     github TEXT DEFAULT 'https://github.com/yourusername',
     instagram TEXT DEFAULT 'https://instagram.com/yourusername',
+    tiktok TEXT DEFAULT NULL,
     
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
@@ -49,12 +51,14 @@ INSERT INTO profiles (
     avatar_url, 
     portfolio_url, 
     whatsapp,
+    telegram,
     messenger,
     email,
     twitter,
     youtube,
     github,
-    instagram
+    instagram,
+    tiktok
 )
 VALUES (
     'Md Shahidullah',
@@ -64,10 +68,12 @@ VALUES (
     'https://pwzxgcljsicbbvgzjxuu.supabase.co/storage/v1/object/public/media/Profile.jpg',
     NULL,
     'https://wa.me/yourphonenumber',
-    'https://m.me/yourusername',
+    'https://t.me/hishahidullah',
+    NULL,
     'mailto:yourname@example.com',
     'https://x.com/yourusername',
     'https://youtube.com/@yourchannel',
     'https://github.com/Black2-o',
-    'https://instagram.com/yourusername'
+    'https://instagram.com/yourusername',
+    NULL
 );

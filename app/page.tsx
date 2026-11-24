@@ -15,12 +15,14 @@ const fallbackProfile: Profile = {
   avatar_url: "",
   portfolio_url: null,
   whatsapp: null,
+  telegram: null,
   messenger: null,
   email: null,
   twitter: null,
   youtube: null,
   github: null,
   instagram: null,
+  tiktok: null,
 };
 
 async function getProfile(): Promise<Profile> {
@@ -44,12 +46,14 @@ async function getProfile(): Promise<Profile> {
       ...fallbackProfile,
       ...data,
       whatsapp: data.whatsapp ?? null,
+      telegram: data.telegram ?? null,
       messenger: data.messenger ?? null,
       email: data.email ?? null,
       twitter: data.twitter ?? null,
       youtube: data.youtube ?? null,
       github: data.github ?? null,
       instagram: data.instagram ?? null,
+      tiktok: data.tiktok ?? null,
     };
   } catch {
     return fallbackProfile;
@@ -90,19 +94,29 @@ export default async function Page() {
     name: profile.name,
     jobTitle: profile.bio,
     image: profile.avatar_url,
-    url: profile.portfolio_url !== "#" && profile.portfolio_url ? profile.portfolio_url : undefined,
+    url: profile.portfolio_url && profile.portfolio_url !== "#" ? profile.portfolio_url : undefined,
     sameAs: [
       profile.whatsapp,
+      profile.telegram,
       profile.messenger,
       profile.twitter,
       profile.youtube,
       profile.github,
       profile.instagram,
+      profile.tiktok,
     ].filter(
       (url): url is string =>
-        typeof url === "string" && url !== "#" && !url.startsWith("mailto:")
+        typeof url === "string" && url.trim() !== "" && url !== "#" && !url.startsWith("mailto:")
     ),
   };
+
+  const hasPortfolio = Boolean(profile.portfolio_url && profile.portfolio_url !== "#");
+  const hasFollowLinks = Boolean(
+    profile.twitter || profile.youtube || profile.github || profile.instagram || profile.tiktok
+  );
+  const hasTalkLinks = Boolean(
+    profile.whatsapp || profile.telegram || profile.messenger || profile.email
+  );
 
   return (
     <>
@@ -174,12 +188,12 @@ export default async function Page() {
           />
         </div>
 
-        {/* Find My Work */}
-        <div className="section stagger-2">
-          <h2>Find My Work</h2>
-          {profile.portfolio_url && profile.portfolio_url !== "#" ? (
+        {/* Find My Work (Only rendered if portfolio exists) */}
+        {hasPortfolio && (
+          <div className="section stagger-2">
+            <h2>Find My Work</h2>
             <a
-              href={profile.portfolio_url}
+              href={profile.portfolio_url!}
               className="portfolio"
               target="_blank"
               rel="noopener noreferrer"
@@ -189,196 +203,149 @@ export default async function Page() {
               <i className="fa-solid fa-briefcase"></i>
               Portfolio
             </a>
-          ) : (
-            <span
-              className="portfolio disabled"
-              data-tooltip="Not linked"
-              aria-label="Portfolio (Not linked)"
-              role="button"
-              aria-disabled="true"
-            >
-              <i className="fa-solid fa-briefcase"></i>
-              Portfolio
-            </span>
-          )}
-        </div>
-
-        {/* Follow Me (Now First: Twitter/X -> YouTube -> GitHub -> Instagram) */}
-        <div className="section stagger-3">
-          <h2>Follow Me</h2>
-          <div className="icons">
-            {/* X (Twitter) */}
-            {profile.twitter ? (
-              <a
-                className="icon twitter"
-                href={profile.twitter}
-                data-tooltip="X (Twitter)"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Twitter / X"
-                data-umami-event="click-twitter"
-              >
-                <i className="fab fa-x-twitter"></i>
-              </a>
-            ) : (
-              <span
-                className="icon twitter disabled"
-                data-tooltip="Not linked"
-                aria-label="Twitter / X (Not linked)"
-                role="button"
-                aria-disabled="true"
-              >
-                <i className="fab fa-x-twitter"></i>
-              </span>
-            )}
-
-            {/* YouTube */}
-            {profile.youtube ? (
-              <a
-                className="icon youtube"
-                href={profile.youtube}
-                data-tooltip="YouTube"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="YouTube"
-                data-umami-event="click-youtube"
-              >
-                <i className="fab fa-youtube"></i>
-              </a>
-            ) : (
-              <span
-                className="icon youtube disabled"
-                data-tooltip="Not linked"
-                aria-label="YouTube (Not linked)"
-                role="button"
-                aria-disabled="true"
-              >
-                <i className="fab fa-youtube"></i>
-              </span>
-            )}
-
-            {/* GitHub */}
-            {profile.github ? (
-              <a
-                className="icon github"
-                href={profile.github}
-                data-tooltip="GitHub"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="GitHub"
-                data-umami-event="click-github"
-              >
-                <i className="fab fa-github"></i>
-              </a>
-            ) : (
-              <span
-                className="icon github disabled"
-                data-tooltip="Not linked"
-                aria-label="GitHub (Not linked)"
-                role="button"
-                aria-disabled="true"
-              >
-                <i className="fab fa-github"></i>
-              </span>
-            )}
-
-            {/* Instagram */}
-            {profile.instagram ? (
-              <a
-                className="icon instagram"
-                href={profile.instagram}
-                data-tooltip="Instagram"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Instagram"
-                data-umami-event="click-instagram"
-              >
-                <i className="fab fa-instagram"></i>
-              </a>
-            ) : (
-              <span
-                className="icon instagram disabled"
-                data-tooltip="Not linked"
-                aria-label="Instagram (Not linked)"
-                role="button"
-                aria-disabled="true"
-              >
-                <i className="fab fa-instagram"></i>
-              </span>
-            )}
           </div>
-        </div>
+        )}
 
-        {/* Talk With Me (Now Second: WhatsApp -> Messenger -> Email) */}
-        <div className="section stagger-4">
-          <h2>Talk With Me</h2>
-          <div className="icons">
-            {/* WhatsApp */}
-            {profile.whatsapp ? (
-              <a
-                className="icon whatsapp"
-                href={profile.whatsapp}
-                data-tooltip="WhatsApp"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="WhatsApp"
-                data-umami-event="click-whatsapp"
-              >
-                <i className="fab fa-whatsapp"></i>
-              </a>
-            ) : (
-              <span
-                className="icon whatsapp disabled"
-                data-tooltip="Not linked"
-                aria-label="WhatsApp (Not linked)"
-                role="button"
-                aria-disabled="true"
-              >
-                <i className="fab fa-whatsapp"></i>
-              </span>
-            )}
+        {/* Follow Me (Twitter/X -> YouTube -> GitHub -> Instagram -> TikTok - Only rendered if link exists) */}
+        {hasFollowLinks && (
+          <div className="section stagger-3">
+            <h2>Follow Me</h2>
+            <div className="icons">
+              {/* X (Twitter) */}
+              {profile.twitter && (
+                <a
+                  className="icon twitter"
+                  href={profile.twitter}
+                  data-tooltip="X (Twitter)"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Twitter / X"
+                  data-umami-event="click-twitter"
+                >
+                  <i className="fab fa-x-twitter"></i>
+                </a>
+              )}
 
-            {/* Messenger */}
-            {profile.messenger ? (
-              <a
-                className="icon messenger"
-                href={profile.messenger}
-                data-tooltip="Messenger"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Facebook Messenger"
-                data-umami-event="click-messenger"
-              >
-                <i className="fab fa-facebook-messenger"></i>
-              </a>
-            ) : (
-              <span
-                className="icon messenger disabled"
-                data-tooltip="Not linked"
-                aria-label="Messenger (Not linked)"
-                role="button"
-                aria-disabled="true"
-              >
-                <i className="fab fa-facebook-messenger"></i>
-              </span>
-            )}
+              {/* YouTube */}
+              {profile.youtube && (
+                <a
+                  className="icon youtube"
+                  href={profile.youtube}
+                  data-tooltip="YouTube"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="YouTube"
+                  data-umami-event="click-youtube"
+                >
+                  <i className="fab fa-youtube"></i>
+                </a>
+              )}
 
-            {/* Email */}
-            {profile.email ? (
-              <EmailButton email={profile.email} />
-            ) : (
-              <span
-                className="icon email disabled"
-                data-tooltip="Not linked"
-                aria-label="Email (Not linked)"
-                role="button"
-                aria-disabled="true"
-              >
-                <i className="fa-solid fa-envelope"></i>
-              </span>
-            )}
+              {/* GitHub */}
+              {profile.github && (
+                <a
+                  className="icon github"
+                  href={profile.github}
+                  data-tooltip="GitHub"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="GitHub"
+                  data-umami-event="click-github"
+                >
+                  <i className="fab fa-github"></i>
+                </a>
+              )}
+
+              {/* Instagram */}
+              {profile.instagram && (
+                <a
+                  className="icon instagram"
+                  href={profile.instagram}
+                  data-tooltip="Instagram"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Instagram"
+                  data-umami-event="click-instagram"
+                >
+                  <i className="fab fa-instagram"></i>
+                </a>
+              )}
+
+              {/* TikTok */}
+              {profile.tiktok && (
+                <a
+                  className="icon tiktok"
+                  href={profile.tiktok}
+                  data-tooltip="TikTok"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="TikTok"
+                  data-umami-event="click-tiktok"
+                >
+                  <i className="fab fa-tiktok"></i>
+                </a>
+              )}
+            </div>
           </div>
-        </div>
+        )}
+
+        {/* Talk With Me (WhatsApp -> Telegram -> Messenger -> Email - Only rendered if link exists) */}
+        {hasTalkLinks && (
+          <div className="section stagger-4">
+            <h2>Talk With Me</h2>
+            <div className="icons">
+              {/* WhatsApp */}
+              {profile.whatsapp && (
+                <a
+                  className="icon whatsapp"
+                  href={profile.whatsapp}
+                  data-tooltip="WhatsApp"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="WhatsApp"
+                  data-umami-event="click-whatsapp"
+                >
+                  <i className="fab fa-whatsapp"></i>
+                </a>
+              )}
+
+              {/* Telegram */}
+              {profile.telegram && (
+                <a
+                  className="icon telegram"
+                  href={profile.telegram}
+                  data-tooltip="Telegram"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Telegram"
+                  data-umami-event="click-telegram"
+                >
+                  <i className="fab fa-telegram"></i>
+                </a>
+              )}
+
+              {/* Messenger */}
+              {profile.messenger && (
+                <a
+                  className="icon messenger"
+                  href={profile.messenger}
+                  data-tooltip="Messenger"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Facebook Messenger"
+                  data-umami-event="click-messenger"
+                >
+                  <i className="fab fa-facebook-messenger"></i>
+                </a>
+              )}
+
+              {/* Email */}
+              {profile.email && (
+                <EmailButton email={profile.email} />
+              )}
+            </div>
+          </div>
+        )}
       </main>
     </>
   );
