@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import type { Metadata } from "next";
 import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 import { Profile } from "@/types/profile";
@@ -111,6 +112,8 @@ export default async function Page() {
   };
 
   const hasPortfolio = Boolean(profile.portfolio_url && profile.portfolio_url !== "#");
+  const showProjects = profile.show_projects !== false;
+  const hasWorkSection = hasPortfolio || showProjects;
   const hasFollowLinks = Boolean(
     profile.twitter || profile.youtube || profile.github || profile.instagram || profile.tiktok
   );
@@ -188,21 +191,37 @@ export default async function Page() {
           />
         </div>
 
-        {/* Find My Work (Only rendered if portfolio exists) */}
-        {hasPortfolio && (
+        {/* Find My Work (Controlled by portfolio_url & show_projects toggle) */}
+        {hasWorkSection && (
           <div className="section stagger-2">
             <h2>Find My Work</h2>
-            <a
-              href={profile.portfolio_url!}
-              className="portfolio"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Portfolio"
-              data-umami-event="click-portfolio"
-            >
-              <i className="fa-solid fa-briefcase"></i>
-              Portfolio
-            </a>
+            <div className="work-buttons">
+              {hasPortfolio && (
+                <a
+                  href={profile.portfolio_url!}
+                  className="portfolio"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Portfolio"
+                  data-umami-event="click-portfolio"
+                >
+                  <i className="fa-solid fa-briefcase"></i>
+                  Portfolio
+                </a>
+              )}
+
+              {showProjects && (
+                <Link
+                  href="/projects"
+                  className="portfolio"
+                  aria-label="Projects"
+                  data-umami-event="click-projects"
+                >
+                  <i className="fa-solid fa-laptop-code"></i>
+                  Projects
+                </Link>
+              )}
+            </div>
           </div>
         )}
 

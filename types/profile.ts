@@ -6,6 +6,7 @@ export interface Profile {
   cover_image_url: string;
   avatar_url: string;
   portfolio_url?: string | null;
+  show_projects?: boolean | null;
 
   // Direct Contact Links
   whatsapp?: string | null;
