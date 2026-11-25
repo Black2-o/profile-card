@@ -51,7 +51,7 @@ export default function RootLayout({
     "21e40a60-e18a-457b-8515-b01e26f34d94";
 
   return (
-    <html lang="en">
+    <html lang="en" data-scroll-behavior="smooth">
       <head>
         {supabaseOrigin && (
           <>

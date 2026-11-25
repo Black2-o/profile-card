@@ -18,7 +18,12 @@ export default async function ProjectsPage() {
     <main className="card projects-card">
       {/* Top Navigation */}
       <div className="projects-topbar">
-        <Link href="/" className="short-back-btn" aria-label="Back to Profile">
+        <Link
+          href="/"
+          className="short-back-btn"
+          aria-label="Back to Profile"
+          data-umami-event="click-back-to-profile"
+        >
           <i className="fa-solid fa-arrow-left"></i>
         </Link>
       </div>
@@ -41,12 +46,15 @@ export default async function ProjectsPage() {
                 href={`/projects/${project.slug}`}
                 className={`gallery-card stagger-${Math.min(idx + 1, 4)}`}
                 aria-label={project.title}
+                data-umami-event="click-project-card"
+                data-umami-event-project={project.slug}
               >
                 <div className="gallery-cover">
                   <Image
                     src={project.cover_image}
                     alt={project.title}
                     fill
+                    priority={idx < 2}
                     sizes="(max-width: 500px) 50vw, 250px"
                     className="gallery-cover-img"
                   />

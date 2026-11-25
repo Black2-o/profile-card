@@ -3,6 +3,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getProjectBySlug, getProjects } from "@/lib/projects";
+import { getProfile } from "@/lib/profile";
+import { ProjectInquiry } from "@/components/ProjectInquiry";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -35,7 +37,10 @@ export const revalidate = 60;
 
 export default async function ProjectDetailPage({ params }: Props) {
   const { slug } = await params;
-  const project = await getProjectBySlug(slug);
+  const [project, profile] = await Promise.all([
+    getProjectBySlug(slug),
+    getProfile(),
+  ]);
 
   if (!project) {
     notFound();
@@ -45,7 +50,12 @@ export default async function ProjectDetailPage({ params }: Props) {
     <main className="card project-detail-card">
       {/* Top Navigation */}
       <div className="projects-topbar">
-        <Link href="/projects" className="short-back-btn" aria-label="Back to Projects">
+        <Link
+          href="/projects"
+          className="short-back-btn"
+          aria-label="Back to Projects"
+          data-umami-event="click-back-to-projects"
+        >
           <i className="fa-solid fa-arrow-left"></i>
         </Link>
       </div>
@@ -149,6 +159,14 @@ export default async function ProjectDetailPage({ params }: Props) {
             </div>
           </div>
         )}
+        {/* Project Inquiry Call-to-Action */}
+        <ProjectInquiry
+          projectTitle={project.title}
+          telegram={profile.telegram}
+          whatsapp={profile.whatsapp}
+          email={profile.email}
+          twitter={profile.twitter}
+        />
       </div>
     </main>
   );

@@ -3,63 +3,10 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 import { Profile } from "@/types/profile";
+import { getProfile } from "@/lib/profile";
 import { EmailButton } from "@/components/EmailButton";
 
 export const revalidate = 60; // Revalidate at most every 60 seconds
-
-const fallbackProfile: Profile = {
-  id: "default",
-  name: "John Doe",
-  bio: "Full-Stack Developer",
-  stats_html: "Building scalable web products • Clean Code • APIs • Modern Systems",
-  cover_image_url: "",
-  avatar_url: "",
-  portfolio_url: null,
-  whatsapp: null,
-  telegram: null,
-  messenger: null,
-  email: null,
-  twitter: null,
-  youtube: null,
-  github: null,
-  instagram: null,
-  tiktok: null,
-};
-
-async function getProfile(): Promise<Profile> {
-  if (!isSupabaseConfigured) {
-    return fallbackProfile;
-  }
-
-  try {
-    const { data, error } = await supabase
-      .from("profiles")
-      .select("*")
-      .order("created_at", { ascending: false })
-      .limit(1)
-      .maybeSingle();
-
-    if (error || !data) {
-      return fallbackProfile;
-    }
-
-    return {
-      ...fallbackProfile,
-      ...data,
-      whatsapp: data.whatsapp ?? null,
-      telegram: data.telegram ?? null,
-      messenger: data.messenger ?? null,
-      email: data.email ?? null,
-      twitter: data.twitter ?? null,
-      youtube: data.youtube ?? null,
-      github: data.github ?? null,
-      instagram: data.instagram ?? null,
-      tiktok: data.tiktok ?? null,
-    };
-  } catch {
-    return fallbackProfile;
-  }
-}
 
 export async function generateMetadata(): Promise<Metadata> {
   const profile = await getProfile();
